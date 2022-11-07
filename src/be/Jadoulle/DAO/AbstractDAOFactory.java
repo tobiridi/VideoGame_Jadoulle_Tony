@@ -1,5 +1,7 @@
 package be.Jadoulle.DAO;
 
+import be.Jadoulle.POJO.*;
+
 public abstract class AbstractDAOFactory {
 	public static final int DAO_FACTORY = 0;
 	
@@ -11,5 +13,6 @@ public abstract class AbstractDAOFactory {
 	}
 	
 	//abstract methods
-	
+	public abstract DAO<User> getUserDao();
+	public abstract DAO<Player> getPlayerDao();
 }

@@ -1,13 +1,22 @@
 package be.Jadoulle.DAO;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import be.Jadoulle.POJO.Player;
+import be.Jadoulle.POJO.User;
 
 public class DAOFactory extends AbstractDAOFactory {
 
 	public static final Connection connection = DatabaseConnection.getInstance();
-	
-	//override methods
+
+	@Override
+	public DAO<User> getUserDao() {
+		return new UserDAO(connection);
+	}
+
+	@Override
+	public DAO<Player> getPlayerDao() {
+		return new PlayerDAO(connection);
+	}
 	
 }
