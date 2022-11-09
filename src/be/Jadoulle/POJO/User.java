@@ -1,9 +1,6 @@
 package be.Jadoulle.POJO;
 
 import java.io.Serializable;
-
-import be.Jadoulle.DAO.AbstractDAOFactory;
-import be.Jadoulle.DAO.DAO;
 import be.Jadoulle.DAO.UserDAO;
 
 public abstract class User implements Serializable {

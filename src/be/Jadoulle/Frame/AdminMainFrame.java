@@ -57,6 +57,11 @@ public class AdminMainFrame extends JFrame {
 		btnAddVideoGame.setVerticalAlignment(SwingConstants.TOP);
 		btnAddVideoGame.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		btnAddVideoGame.setBounds(150, 50, 120, 50);
+		btnAddVideoGame.addActionListener((ActionEvent e) -> {
+			AddVideoGameFrame frame = new AddVideoGameFrame(admin);
+			frame.setVisible(true);
+			dispose();
+		});
 		contentPane.add(btnAddVideoGame);
 		
 		JButton btnEditVideoGames = new JButton("<html>Modifier les crédits des jeux</html>");

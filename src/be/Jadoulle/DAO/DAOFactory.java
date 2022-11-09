@@ -4,6 +4,7 @@ import java.sql.Connection;
 
 import be.Jadoulle.POJO.Player;
 import be.Jadoulle.POJO.User;
+import be.Jadoulle.POJO.VideoGame;
 
 public class DAOFactory extends AbstractDAOFactory {
 
@@ -17,6 +18,11 @@ public class DAOFactory extends AbstractDAOFactory {
 	@Override
 	public DAO<Player> getPlayerDao() {
 		return new PlayerDAO(connection);
+	}
+
+	@Override
+	public DAO<VideoGame> getVideoGameDao() {
+		return new VideoGameDAO(connection);
 	}
 	
 }

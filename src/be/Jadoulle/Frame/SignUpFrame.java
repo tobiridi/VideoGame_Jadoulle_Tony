@@ -156,11 +156,14 @@ public class SignUpFrame extends JFrame {
 				User newPlayer = new Player(0, username, password, credits, pseudo, LocalDate.now(), dateOfBirth);
 				if(newPlayer instanceof Player player) {
 					if (player.signUp()) {
-						JOptionPane.showMessageDialog(SignUpFrame.this, "Compte créer avec success", "Information",JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(SignUpFrame.this, "Compte créer avec succès", "Information",JOptionPane.INFORMATION_MESSAGE);
 						// back to login Frame
 						IndexFrame frame = new IndexFrame();
 						frame.setVisible(true);
 						dispose();
+					}
+					else {
+						JOptionPane.showMessageDialog(SignUpFrame.this, "Le compte n'a pas pu être créer", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}

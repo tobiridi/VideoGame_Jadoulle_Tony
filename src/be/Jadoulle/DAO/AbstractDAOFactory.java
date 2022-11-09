@@ -15,4 +15,5 @@ public abstract class AbstractDAOFactory {
 	//abstract methods
 	public abstract DAO<User> getUserDao();
 	public abstract DAO<Player> getPlayerDao();
+	public abstract DAO<VideoGame> getVideoGameDao();
 }
