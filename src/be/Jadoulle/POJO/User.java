@@ -51,9 +51,4 @@ public abstract class User implements Serializable {
 		return UserDAO.authenticate(username, password);
 	}
 	
-	public static boolean signUp(User newUser) {
-		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
-		DAO<User> userDao = adf.getUserDao();
-		return userDao.create(newUser);
-	}
 }

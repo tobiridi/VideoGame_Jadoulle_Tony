@@ -102,7 +102,7 @@ public class SignUpFrame extends JFrame {
 		lblDateOfBirth.setBounds(43, 185, 140, 20);
 		contentPane.add(lblDateOfBirth);
 		
-		JLabel lblInfoDateOfBirth = new JLabel("*Age entre 16 et 100 ans");
+		JLabel lblInfoDateOfBirth = new JLabel("*Age min 16 ans");
 		lblInfoDateOfBirth.setHorizontalAlignment(SwingConstants.LEFT);
 		lblInfoDateOfBirth.setFont(new Font("Book Antiqua", Font.PLAIN, 12));
 		lblInfoDateOfBirth.setBounds(53, 205, 130, 14);
@@ -154,12 +154,14 @@ public class SignUpFrame extends JFrame {
 				LocalDate dateOfBirth = LocalDate.ofInstant(tempDate.toInstant(), ZoneId.systemDefault());
 				
 				User newPlayer = new Player(0, username, password, credits, pseudo, LocalDate.now(), dateOfBirth);
-				if (User.signUp(newPlayer)) {
-					JOptionPane.showMessageDialog(SignUpFrame.this, "Compte créer avec success", "Information",JOptionPane.INFORMATION_MESSAGE);
-					//back to login Frame
-					IndexFrame frame = new IndexFrame();
-					frame.setVisible(true);
-					dispose();
+				if(newPlayer instanceof Player player) {
+					if (player.signUp()) {
+						JOptionPane.showMessageDialog(SignUpFrame.this, "Compte créer avec success", "Information",JOptionPane.INFORMATION_MESSAGE);
+						// back to login Frame
+						IndexFrame frame = new IndexFrame();
+						frame.setVisible(true);
+						dispose();
+					}
 				}
 			}
 			else {

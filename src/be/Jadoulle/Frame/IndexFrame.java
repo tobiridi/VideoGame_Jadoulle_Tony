@@ -63,7 +63,7 @@ public class IndexFrame extends JFrame {
 		JLabel lblTitle = new JLabel("Video Game");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Book Antiqua", Font.PLAIN, 18));
-		lblTitle.setBounds(150, 11, 150, 20);
+		lblTitle.setBounds(150, 10, 150, 20);
 		contentPane.add(lblTitle);
 		
 		tfUsername = new JTextField();

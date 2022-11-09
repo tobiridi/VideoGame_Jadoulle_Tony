@@ -24,12 +24,7 @@ public class UserDAO extends DAO<User> {
 
 	@Override
 	public boolean create(User obj) {
-		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
-		if(obj instanceof Player p) {
-			DAO<Player> playerDao = adf.getPlayerDao();
-			return playerDao.create(p);
-		}
-		
+		// TODO Auto-generated method stub
 		return false;
 	}
 
