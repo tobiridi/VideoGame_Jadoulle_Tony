@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import be.Jadoulle.POJO.Player;
 
@@ -53,6 +54,12 @@ public class PlayerDAO extends DAO<Player> {
 	public boolean delete(Player obj) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public ArrayList<Player> findAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

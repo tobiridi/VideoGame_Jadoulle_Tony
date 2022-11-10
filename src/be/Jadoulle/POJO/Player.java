@@ -86,4 +86,16 @@ public class Player extends User {
 	public void addCopy(Copy copy) {
 		this.copies.add(copy);
 	}
+	
+	public boolean createCopy(VideoGame game) {
+		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+		DAO<Copy> copyDao = adf.getCopyDao();
+		Copy copy = new Copy(this, game);
+		boolean isCreate = copyDao.create(copy);
+		
+		if(isCreate)
+			this.addCopy(copy);
+		
+		return isCreate;
+	}
 }

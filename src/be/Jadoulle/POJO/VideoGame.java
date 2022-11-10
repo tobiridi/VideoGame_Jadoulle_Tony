@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import be.Jadoulle.DAO.AbstractDAOFactory;
+import be.Jadoulle.DAO.DAO;
 
 public class VideoGame implements Serializable {
 	private static final long serialVersionUID = 6497780619918639099L;
@@ -83,6 +84,12 @@ public class VideoGame implements Serializable {
 	
 	public void addCopy(Copy copy) {
 		this.copies.add(copy);
+	}
+	
+	public static ArrayList<VideoGame> getAll(){
+		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+		DAO<VideoGame> gameDao = adf.getVideoGameDao();
+		return gameDao.findAll();
 	}
 	
 }

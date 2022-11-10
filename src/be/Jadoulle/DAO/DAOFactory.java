@@ -2,12 +2,12 @@ package be.Jadoulle.DAO;
 
 import java.sql.Connection;
 
+import be.Jadoulle.POJO.Copy;
 import be.Jadoulle.POJO.Player;
 import be.Jadoulle.POJO.User;
 import be.Jadoulle.POJO.VideoGame;
 
 public class DAOFactory extends AbstractDAOFactory {
-
 	public static final Connection connection = DatabaseConnection.getInstance();
 
 	@Override
@@ -23,6 +23,11 @@ public class DAOFactory extends AbstractDAOFactory {
 	@Override
 	public DAO<VideoGame> getVideoGameDao() {
 		return new VideoGameDAO(connection);
+	}
+
+	@Override
+	public DAO<Copy> getCopyDao() {
+		return new CopyDAO(connection);
 	}
 	
 }

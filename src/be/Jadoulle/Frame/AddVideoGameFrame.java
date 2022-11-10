@@ -23,7 +23,6 @@ import javax.swing.JSpinner;
 import javax.swing.JButton;
 
 public class AddVideoGameFrame extends JFrame {
-	private Administrator admin;
 	private JPanel contentPane;
 	private JTextField tfName;
 	private JTextField tfCreditCost;
@@ -50,7 +49,6 @@ public class AddVideoGameFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public AddVideoGameFrame(Administrator admin) {
-		this.admin = admin;
 		setTitle("Ajouter un jeu vidéo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -117,7 +115,7 @@ public class AddVideoGameFrame extends JFrame {
 		btnCancel.setBounds(69, 185, 100, 25);
 		btnCancel.addActionListener((ActionEvent e) -> {
 			// back to admin main frame
-			AdminMainFrame frame = new AdminMainFrame(this.admin);
+			AdminMainFrame frame = new AdminMainFrame(admin);
 			frame.setVisible(true);
 			dispose();
 		});
@@ -136,10 +134,10 @@ public class AddVideoGameFrame extends JFrame {
 				LocalDate releaseDate = LocalDate.ofInstant(release.toInstant(), ZoneId.systemDefault());
 				
 				VideoGame game = new VideoGame(0, name, creditCost, console, releaseDate);
-				if(this.admin.createVideoGame(game)) {
+				if(admin.createVideoGame(game)) {
 					JOptionPane.showMessageDialog(AddVideoGameFrame.this, "Jeu créer avec succès", "Information",JOptionPane.INFORMATION_MESSAGE);
 					// back to admin main frame
-					AdminMainFrame frame = new AdminMainFrame(this.admin);
+					AdminMainFrame frame = new AdminMainFrame(admin);
 					frame.setVisible(true);
 					dispose();
 				}
@@ -156,14 +154,14 @@ public class AddVideoGameFrame extends JFrame {
 	
 	private boolean isFormValid() {
 		try {
-			int creditCost = Integer.parseInt(tfCreditCost.getText());
-			Date d = (Date) spinnerReleaseDate.getValue();
+			int creditCost = Integer.parseInt(this.tfCreditCost.getText());
+			Date d = (Date) this.spinnerReleaseDate.getValue();
 			LocalDate release = LocalDate.ofInstant(d.toInstant(), ZoneId.systemDefault());
 			
 			//name, credit cost, release date, console
-			return tfName.getText().trim().length() >= 3 && creditCost > 0
+			return this.tfName.getText().trim().length() >= 3 && creditCost > 0
 					&& release.isBefore(LocalDate.now().plusDays(1))
-					&& !tfConsole.getText().isBlank();
+					&& !this.tfConsole.getText().isBlank();
 			
 		} catch (NumberFormatException e) {
 			//credit cost is not a number

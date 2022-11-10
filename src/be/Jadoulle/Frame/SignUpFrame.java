@@ -20,7 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class SignUpFrame extends JFrame {

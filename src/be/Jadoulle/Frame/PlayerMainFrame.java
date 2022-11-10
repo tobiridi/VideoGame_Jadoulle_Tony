@@ -3,16 +3,12 @@ package be.Jadoulle.Frame;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.time.LocalDate;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import be.Jadoulle.POJO.Copy;
 import be.Jadoulle.POJO.Player;
-import be.Jadoulle.POJO.User;
-import be.Jadoulle.POJO.VideoGame;
 
 import javax.swing.JLabel;
 import java.awt.Color;
@@ -59,7 +55,8 @@ public class PlayerMainFrame extends JFrame {
 		contentPane.add(lblTitle);
 		
 		JLabel lblUserCredits = new JLabel("Vous avez : " + player.getCredits() + " crédits");
-		lblUserCredits.setHorizontalAlignment(SwingConstants.RIGHT); 
+		lblUserCredits.setHorizontalAlignment(SwingConstants.RIGHT);
+		//change foreground depend of player credits
 		if(player.getCredits() <= 0) {
 			lblUserCredits.setForeground(new Color(215, 31, 21));
 		}
@@ -72,20 +69,31 @@ public class PlayerMainFrame extends JFrame {
 		
 		JButton btnConsultGames = new JButton("<html>Consulter les jeux vidéos</html>");
 		btnConsultGames.setVerticalAlignment(SwingConstants.TOP);
-		btnConsultGames.setBounds(38, 75, 135, 50);
+		btnConsultGames.setBounds(38, 75, 140, 50);
 		btnConsultGames.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
+		btnConsultGames.addActionListener((ActionEvent e) -> {
+			//TODO : not implemented
+		});
 		contentPane.add(btnConsultGames);
 		
-		JButton btnConsultLoans = new JButton("<html>Consulter les réservations</html>");
+		JButton btnConsultLoans = new JButton("<html>Consulter vos réservations</html>");
 		btnConsultLoans.setVerticalAlignment(SwingConstants.TOP);
 		btnConsultLoans.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
-		btnConsultLoans.setBounds(38, 135, 135, 50);
+		btnConsultLoans.setBounds(38, 135, 140, 50);
+		btnConsultLoans.addActionListener((ActionEvent e) -> {
+			//TODO : not implemented
+		});
 		contentPane.add(btnConsultLoans);
 		
 		JButton btnAddCopy = new JButton("<html>Prêter un jeu video</html>");
+		btnAddCopy.addActionListener((ActionEvent e) -> {
+			AddCopyVideoGameFrame frame = new AddCopyVideoGameFrame(player);
+			frame.setVisible(true);
+			dispose();
+		});
 		btnAddCopy.setVerticalAlignment(SwingConstants.TOP);
 		btnAddCopy.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
-		btnAddCopy.setBounds(38, 195, 135, 50);
+		btnAddCopy.setBounds(38, 195, 140, 50);
 		contentPane.add(btnAddCopy);
 		
 		JButton btnDisconnect = new JButton("Déconnexion");

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import be.Jadoulle.POJO.Administrator;
 import be.Jadoulle.POJO.Player;
@@ -73,5 +74,11 @@ public class UserDAO extends DAO<User> {
 		}
 		
 		return authenticateUser;
+	}
+
+	@Override
+	public ArrayList<User> findAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
