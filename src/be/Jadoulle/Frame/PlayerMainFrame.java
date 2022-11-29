@@ -8,9 +8,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import be.Jadoulle.POJO.Booking;
+import be.Jadoulle.POJO.Copy;
+import be.Jadoulle.POJO.Loan;
 import be.Jadoulle.POJO.Player;
+import be.Jadoulle.POJO.User;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -72,7 +78,13 @@ public class PlayerMainFrame extends JFrame {
 		btnConsultGames.setBounds(38, 75, 140, 50);
 		btnConsultGames.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		btnConsultGames.addActionListener((ActionEvent e) -> {
-			//TODO : not implemented
+			//display message before consult video game frame
+			if(!player.hasCredits()) {
+				JOptionPane.showMessageDialog(PlayerMainFrame.this, "Vous n'avez pas assez de crédits pour réserver un jeu", "Copie", JOptionPane.WARNING_MESSAGE);
+			}
+			ConsultVideoGamesFrame frame = new ConsultVideoGamesFrame(player);
+			frame.setVisible(true);
+			dispose();
 		});
 		contentPane.add(btnConsultGames);
 		

@@ -92,4 +92,27 @@ public class VideoGame implements Serializable {
 		return gameDao.findAll();
 	}
 	
+	/**
+	 * Search if a copy is available, if {@code player} argument is not null<br>
+	 * exclude the copy of this player if exists.
+	 * @author tony
+	 * @param player  the player who wants to borrow a copy.
+	 * @return {@link Copy}
+	 */
+	public Copy copyAvailable(Player player) {
+		for(Copy c : this.copies) {
+			if(player != null) {
+				//exclude player's copies
+				if(c.getOwner().equals(player)) {
+					continue;
+				}
+			}
+			
+			if(c.isAvailable()) {
+				//return first copy available
+				return c;
+			}
+		}
+		return null;
+	}
 }

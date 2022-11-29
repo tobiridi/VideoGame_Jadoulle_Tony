@@ -17,4 +17,6 @@ public abstract class AbstractDAOFactory {
 	public abstract DAO<Player> getPlayerDao();
 	public abstract DAO<VideoGame> getVideoGameDao();
 	public abstract DAO<Copy> getCopyDao();
+	public abstract DAO<Loan> getLoanDao();
+	public abstract DAO<Booking> getBookingDao();
 }

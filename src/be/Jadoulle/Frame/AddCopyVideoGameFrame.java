@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableColumnModelListener;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import be.Jadoulle.Components.VideoGameTableModel;
 import be.Jadoulle.POJO.Player;
@@ -17,9 +21,11 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
@@ -70,10 +76,12 @@ public class AddCopyVideoGameFrame extends JFrame {
 		contentPane.add(lblTitle);
 		
 		scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setBounds(70, 70, 270, 130);
+		scrollPane.setBounds(30, 70, 375, 130);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		//parameter the JTable model
+		this.tableModelChange();
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -83,9 +91,8 @@ public class AddCopyVideoGameFrame extends JFrame {
 				gameSelected = model.getVideoGameAt(row);
 			}
 		});
-		//parameter the JTable model
-		this.tableModelChange();
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		scrollPane.setViewportView(table);
 		
 		btnCancel = new JButton("Annuler");
@@ -146,5 +153,8 @@ public class AddCopyVideoGameFrame extends JFrame {
 		}
 		
 		table.setModel(customModel);
+		//first column is the 2/3 of total column width
+		int prefWidth = table.getColumnModel().getTotalColumnWidth() * 2 / 3;
+		table.getColumnModel().getColumn(0).setPreferredWidth(prefWidth);
 	}
 }

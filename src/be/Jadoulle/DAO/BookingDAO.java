@@ -1,32 +1,32 @@
 package be.Jadoulle.DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import be.Jadoulle.POJO.Copy;
+import be.Jadoulle.POJO.Booking;
 import be.Jadoulle.POJO.Player;
 import be.Jadoulle.POJO.VideoGame;
 
-public class CopyDAO extends DAO<Copy> {
+public class BookingDAO extends DAO<Booking> {
 
-	public CopyDAO(Connection conn) {
+	public BookingDAO(Connection conn) {
 		super(conn);
 	}
 
 	@Override
-	public Copy find(int id) {
-//		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
-//		DAO<Loan> loanDao = adf.getLoanDao();
-		Copy copy = null;
+	public Booking find(int id) {
+		Booking booking = null;
 		try {
-			String query = "SELECT User.id AS user_id, User.username, User.pseudo, User.registration, User.dateOfBirth, User.credits, "
+			String query = "SELECT Booking.bookingDate, Booking.nbrWeeks, "
+					+ "User.id AS user_id, User.username, User.pseudo, User.registration, User.dateOfBirth, User.credits, "
 					+ "Video_game.Number, Video_game.videoGameName, Video_game.creditCost, Video_game.console, Video_game.releaseDate "
-					+ "FROM Video_game INNER JOIN (([User] INNER JOIN Video_game_copy ON User.id = Video_game_copy.idUserOwner) LEFT JOIN Loan ON Video_game_copy.id = Loan.idVideoGameCopy) ON Video_game.Number = Video_game_copy.numberVideoGame "
-					+ "WHERE (((Video_game_copy.id) = ?))";
+					+ "FROM [User] INNER JOIN (Video_game INNER JOIN Booking ON Video_game.Number = Booking.numberVideoGame) ON User.id = Booking.idUser "
+					+ "WHERE (((Booking.id) = ?))";
 			PreparedStatement stmt = this.connection.prepareStatement(query);
 			stmt.setInt(1, id);
 			
@@ -49,15 +49,11 @@ public class CopyDAO extends DAO<Copy> {
 				
 				VideoGame game = new VideoGame(numberVideoGame, name, cost, console, release);
 				
-				copy = new Copy(id, player, game);
+				LocalDate bookingDate = res.getDate("bookingDate").toLocalDate();
+				//TODO : complete booking if needs
+				int weeks = res.getInt("nbrWeeks");
 				
-//				int idLoan = res.getInt("loan_id");
-//				if(idLoan != 0) {
-//					Loan loan = loanDao.find(idLoan);
-//					loan.setCopy(copy);
-//					loan.setLender(copy.getOwner());
-//					copy.setCopyLoan(loan);
-//				}
+				booking = new Booking(id, bookingDate, game, player, weeks);
 			}
 			
 			stmt.close();
@@ -66,39 +62,26 @@ public class CopyDAO extends DAO<Copy> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return copy;
-	}
-
-	@Override
-	public ArrayList<Copy> findAll() {
-		ArrayList<Copy> copies = new ArrayList<>();
-		try {
-			String query = "SELECT id FROM Video_game_copy";
-			
-			ResultSet res = this.connection
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery(query);
-			while(res.next()) {
-				Copy copy = this.find(res.getInt("id"));
-				copies.add(copy);
-			}
-			
-			res.close();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
-		return copies;
+		return booking;
 	}
 
 	@Override
-	public boolean create(Copy obj) {
+	public ArrayList<Booking> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean create(Booking obj) {
 		try {
-			String query = "INSERT INTO Video_game_copy (idUserOwner, numberVideoGame) VALUES (?,?)";
+			String query = "INSERT INTO Booking (bookingDate, nbrWeeks, numberVideoGame, idUser)"
+					+ " VALUES (?,?,?,?)";
 			PreparedStatement stmt = this.connection.prepareStatement(query);
-			stmt.setInt(1, obj.getOwner().getId());
-			stmt.setInt(2, obj.getVideoGame().getNumber());
+			stmt.setDate(1, Date.valueOf(obj.getBookingDate()));
+			stmt.setInt(2, obj.getNbrWeeks());
+			stmt.setInt(3, obj.getVideoGame().getNumber());
+			stmt.setInt(4, obj.getPlayer().getId());
 			
 			int res = stmt.executeUpdate();
 			stmt.close();
@@ -113,15 +96,15 @@ public class CopyDAO extends DAO<Copy> {
 	}
 
 	@Override
-	public boolean update(Copy obj) {
+	public boolean update(Booking obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean delete(Copy obj) {
+	public boolean delete(Booking obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 }
