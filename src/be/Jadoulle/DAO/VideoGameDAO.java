@@ -128,7 +128,20 @@ public class VideoGameDAO extends DAO<VideoGame> {
 
 	@Override
 	public boolean delete(VideoGame obj) {
-		// TODO Auto-generated method stub
+		try {
+			String query = "DELETE FROM Video_game WHERE number = ?";
+			PreparedStatement stmt = this.connection.prepareStatement(query);
+			stmt.setInt(1, obj.getNumber());
+			
+			int res = stmt.executeUpdate();
+			stmt.close();
+			if(res == 1)
+				return true;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 

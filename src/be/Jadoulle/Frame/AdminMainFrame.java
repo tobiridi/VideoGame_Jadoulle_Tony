@@ -64,10 +64,15 @@ public class AdminMainFrame extends JFrame {
 		});
 		contentPane.add(btnAddVideoGame);
 		
-		JButton btnEditVideoGames = new JButton("<html>Modifier les crédits des jeux</html>");
+		JButton btnEditVideoGames = new JButton("<html>Editer les jeux vidéos</html>");
 		btnEditVideoGames.setVerticalAlignment(SwingConstants.TOP);
 		btnEditVideoGames.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
-		btnEditVideoGames.setBounds(130, 120, 160, 50);
+		btnEditVideoGames.setBounds(150, 120, 120, 50);
+		btnEditVideoGames.addActionListener((ActionEvent e) -> {
+			EditVideoGameFrame frame = new EditVideoGameFrame(admin);
+			frame.setVisible(true);
+			dispose();
+		});
 		contentPane.add(btnEditVideoGames);
 		
 		JButton btnDisconnect = new JButton("Déconnexion");

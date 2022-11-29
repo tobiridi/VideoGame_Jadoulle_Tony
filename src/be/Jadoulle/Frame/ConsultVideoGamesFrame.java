@@ -36,7 +36,6 @@ public class ConsultVideoGamesFrame extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private VideoGame selectedGame;
-	private ArrayList<VideoGame> videoGames;
 
 	/**
 	 * Launch the application.
@@ -83,7 +82,6 @@ public class ConsultVideoGamesFrame extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//save the copy object based the row in the JTable 
 				int row = table.getSelectedRow();
 				VideoGameTableModel model = (VideoGameTableModel) table.getModel();
 				selectedGame = model.getVideoGameAt(row);
@@ -136,15 +134,15 @@ public class ConsultVideoGamesFrame extends JFrame {
 	}
 	
 	private void tableModelChange() {
-		this.videoGames = VideoGame.getAll();
-		VideoGameTableModel customModel = new VideoGameTableModel(this.videoGames);
+		ArrayList<VideoGame> videoGames = VideoGame.getAll();
+		VideoGameTableModel customModel = new VideoGameTableModel(videoGames);
 		
 		//column title
 		String[] identifiersCol = {"Nom du jeu", "Console", "Coût en crédits", "Date de Sortie"};
 		customModel.setColumnIdentifiers(identifiersCol);
 		
 		//data of each row
-		for (VideoGame game : this.videoGames) {
+		for (VideoGame game : videoGames) {
 			String[] gameData = {game.getName(), game.getConsole(), "" + game.getCreditCost(), game.getReleaseDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))};
 			customModel.addRow(gameData);
 		}

@@ -17,4 +17,10 @@ public class Administrator extends User {
 		return gameDao.create(game);
 	}
 	
+	public boolean deleteVideoGame(VideoGame game) {
+		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+		DAO<VideoGame> gameDao = adf.getVideoGameDao();
+		return gameDao.delete(game);
+	}
+	
 }
