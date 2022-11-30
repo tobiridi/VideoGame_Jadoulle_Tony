@@ -29,7 +29,7 @@ public class BookingDAO extends DAO<Booking> {
 					+ "WHERE (((Booking.id) = ?))";
 			PreparedStatement stmt = this.connection.prepareStatement(query);
 			stmt.setInt(1, id);
-			
+
 			ResultSet res = stmt.executeQuery();
 			while(res.next()) {
 				int idPlayer = res.getInt("user_id");
@@ -38,7 +38,7 @@ public class BookingDAO extends DAO<Booking> {
 				LocalDate registration = res.getDate("registration").toLocalDate();
 				LocalDate birth =res.getDate("dateOfBirth").toLocalDate();
 				int credits = res.getInt("credits");
-				
+
 				Player player = new Player(idPlayer, username, null, credits, pseudo, registration, birth);
 
 				int numberVideoGame = res.getInt("number");
@@ -46,23 +46,23 @@ public class BookingDAO extends DAO<Booking> {
 				int cost = res.getInt("creditCost");
 				String console = res.getString("console");
 				LocalDate release = res.getDate("releaseDate").toLocalDate();
-				
+
 				VideoGame game = new VideoGame(numberVideoGame, name, cost, console, release);
-				
+
 				LocalDate bookingDate = res.getDate("bookingDate").toLocalDate();
 				//TODO : complete booking if needs
 				int weeks = res.getInt("nbrWeeks");
-				
+
 				booking = new Booking(id, bookingDate, game, player, weeks);
 			}
-			
+
 			stmt.close();
 			res.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return booking;
 	}
 
@@ -82,16 +82,16 @@ public class BookingDAO extends DAO<Booking> {
 			stmt.setInt(2, obj.getNbrWeeks());
 			stmt.setInt(3, obj.getVideoGame().getNumber());
 			stmt.setInt(4, obj.getPlayer().getId());
-			
+
 			int res = stmt.executeUpdate();
 			stmt.close();
 			if(res != 0)
 				return true;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 

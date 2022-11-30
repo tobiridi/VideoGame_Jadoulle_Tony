@@ -29,7 +29,7 @@ public class CopyDAO extends DAO<Copy> {
 					+ "WHERE (((Video_game_copy.id) = ?))";
 			PreparedStatement stmt = this.connection.prepareStatement(query);
 			stmt.setInt(1, id);
-			
+
 			ResultSet res = stmt.executeQuery();
 			while(res.next()) {
 				int idPlayer = res.getInt("user_id");
@@ -38,7 +38,7 @@ public class CopyDAO extends DAO<Copy> {
 				LocalDate registration = res.getDate("registration").toLocalDate();
 				LocalDate birth =res.getDate("dateOfBirth").toLocalDate();
 				int credits = res.getInt("credits");
-				
+
 				Player player = new Player(idPlayer, username, null, credits, pseudo, registration, birth);
 
 				int numberVideoGame = res.getInt("number");
@@ -46,11 +46,11 @@ public class CopyDAO extends DAO<Copy> {
 				int cost = res.getInt("creditCost");
 				String console = res.getString("console");
 				LocalDate release = res.getDate("releaseDate").toLocalDate();
-				
+
 				VideoGame game = new VideoGame(numberVideoGame, name, cost, console, release);
-				
+
 				copy = new Copy(id, player, game);
-				
+
 //				int idLoan = res.getInt("loan_id");
 //				if(idLoan != 0) {
 //					Loan loan = loanDao.find(idLoan);
@@ -59,10 +59,10 @@ public class CopyDAO extends DAO<Copy> {
 //					copy.setCopyLoan(loan);
 //				}
 			}
-			
+
 			stmt.close();
 			res.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -74,7 +74,7 @@ public class CopyDAO extends DAO<Copy> {
 		ArrayList<Copy> copies = new ArrayList<>();
 		try {
 			String query = "SELECT id FROM Video_game_copy";
-			
+
 			ResultSet res = this.connection
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
@@ -82,13 +82,13 @@ public class CopyDAO extends DAO<Copy> {
 				Copy copy = this.find(res.getInt("id"));
 				copies.add(copy);
 			}
-			
+
 			res.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return copies;
 	}
 
@@ -99,16 +99,16 @@ public class CopyDAO extends DAO<Copy> {
 			PreparedStatement stmt = this.connection.prepareStatement(query);
 			stmt.setInt(1, obj.getOwner().getId());
 			stmt.setInt(2, obj.getVideoGame().getNumber());
-			
+
 			int res = stmt.executeUpdate();
 			stmt.close();
 			if(res != 0)
 				return true;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
@@ -123,5 +123,5 @@ public class CopyDAO extends DAO<Copy> {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 }

@@ -1,35 +1,28 @@
 package be.Jadoulle.Frame;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.TableColumnModelListener;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 import be.Jadoulle.Components.VideoGameTableModel;
 import be.Jadoulle.POJO.Player;
 import be.Jadoulle.POJO.VideoGame;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Enumeration;
-
-import javax.swing.SwingConstants;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class AddCopyVideoGameFrame extends JFrame {
 	private JPanel contentPane;
@@ -37,14 +30,15 @@ public class AddCopyVideoGameFrame extends JFrame {
 	private JButton btnCancel;
 	private JButton btnConfirm;
 	private JScrollPane scrollPane;
-	private ArrayList<VideoGame> videoGames;
 	private VideoGame gameSelected;
+	private ArrayList<VideoGame> videoGames;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					AddCopyVideoGameFrame frame = new AddCopyVideoGameFrame(null);
@@ -56,36 +50,42 @@ public class AddCopyVideoGameFrame extends JFrame {
 		});
 	}
 
+	@Override
+	protected void frameInit() {
+		super.frameInit();
+		this.videoGames = VideoGame.getAll();
+	}
+	
 	/**
 	 * Create the frame.
 	 */
 	public AddCopyVideoGameFrame(Player player) {
 		setTitle("Prêter un nouveau jeu");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblTitle = new JLabel("Jeu à mettre en location");
 		lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTitle.setFont(new Font("Book Antiqua", Font.PLAIN, 18));
 		lblTitle.setBounds(110, 10, 210, 20);
 		contentPane.add(lblTitle);
-		
-		scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setBounds(30, 70, 375, 130);
 		contentPane.add(scrollPane);
-		
+
 		table = new JTable();
 		//parameter the JTable model
 		this.tableModelChange();
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//save the video game object based the row in the JTable 
+				//save the video game object based the row in the JTable
 				int row = table.getSelectedRow();
 				VideoGameTableModel model = (VideoGameTableModel) table.getModel();
 				gameSelected = model.getVideoGameAt(row);
@@ -94,7 +94,7 @@ public class AddCopyVideoGameFrame extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		scrollPane.setViewportView(table);
-		
+
 		btnCancel = new JButton("Annuler");
 		btnCancel.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		btnCancel.setBounds(80, 211, 100, 25);
@@ -105,7 +105,7 @@ public class AddCopyVideoGameFrame extends JFrame {
 			dispose();
 		});
 		contentPane.add(btnCancel);
-		
+
 		btnConfirm = new JButton("Confirmer");
 		btnConfirm.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		btnConfirm.setBounds(210, 211, 120, 25);
@@ -128,30 +128,29 @@ public class AddCopyVideoGameFrame extends JFrame {
 			else {
 				JOptionPane.showMessageDialog(AddCopyVideoGameFrame.this, "Aucun jeu n'a été sélectionner", "Erreur", JOptionPane.ERROR_MESSAGE);
 			}
-			
+
 		});
 		contentPane.add(btnConfirm);
-		
+
 		JLabel lblTableInfo = new JLabel("<html>*Sélectionner dans le tableau le jeu pour lequel vous voudriez mettre une copie en prêt.</html>");
 		lblTableInfo.setBounds(80, 35, 300, 30);
 		lblTableInfo.setFont(new Font("Book Antiqua", Font.PLAIN, 12));
 		contentPane.add(lblTableInfo);
 	}
-	
+
 	private void tableModelChange() {
-		this.videoGames = VideoGame.getAll();
 		VideoGameTableModel customModel = new VideoGameTableModel(this.videoGames);
-		
+
 		//column title
 		String[] identifiersCol = {"Nom du jeu", "Console", "Gain crédits", "Date de Sortie"};
 		customModel.setColumnIdentifiers(identifiersCol);
-		
+
 		//data of each row
 		for (VideoGame game : this.videoGames) {
 			String[] gameData = {game.getName(), game.getConsole(), "" + game.getCreditCost(), game.getReleaseDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))};
 			customModel.addRow(gameData);
 		}
-		
+
 		table.setModel(customModel);
 		//first column is the 2/3 of total column width
 		int prefWidth = table.getColumnModel().getTotalColumnWidth() * 2 / 3;

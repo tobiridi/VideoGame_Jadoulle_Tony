@@ -34,7 +34,7 @@ public class VideoGameDAO extends DAO<VideoGame> {
 					+ "WHERE (((Video_game.Number) = ?))";
 			PreparedStatement stmt = this.connection.prepareStatement(query);
 			stmt.setInt(1, number);
-			
+
 			ResultSet res = stmt.executeQuery();
 			while(res.next()) {
 				if(game == null) {
@@ -42,10 +42,10 @@ public class VideoGameDAO extends DAO<VideoGame> {
 					int cost = res.getInt("creditCost");
 					String console = res.getString("console");
 					LocalDate release = res.getDate("releaseDate").toLocalDate();
-					
+
 					game = new VideoGame(number, name, cost, console, release);
 				}
-				
+
 				//add bookings
 				if(res.getInt("booking_id") != 0) {
 					Booking booking = bookingDao.find(res.getInt("booking_id"));
@@ -54,7 +54,7 @@ public class VideoGameDAO extends DAO<VideoGame> {
 						game.addBooking(booking);
 					}
 				}
-				
+
 				//add copies
 				if(res.getInt("Video_game_copy_id") != 0) {
 					Copy copy = copyDao.find(res.getInt("Video_game_copy_id"));
@@ -64,14 +64,14 @@ public class VideoGameDAO extends DAO<VideoGame> {
 					}
 				}
 			}
-			
+
 			stmt.close();
 			res.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return game;
 	}
 
@@ -83,21 +83,21 @@ public class VideoGameDAO extends DAO<VideoGame> {
 			ResultSet res = this.connection.
 					createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
-			
+
 			while(res.next()) {
 				VideoGame game = this.find(res.getInt("number"));
 				allGames.add(game);
 			}
-			
+
 			res.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return allGames;
 	}
-	
+
 	@Override
 	public boolean create(VideoGame obj) {
 		try {
@@ -107,22 +107,38 @@ public class VideoGameDAO extends DAO<VideoGame> {
 			stmt.setInt(2, obj.getCreditCost());
 			stmt.setString(3, obj.getConsole());
 			stmt.setDate(4, Date.valueOf(obj.getReleaseDate()));
-			
+
 			int res = stmt.executeUpdate();
 			stmt.close();
 			if(res != 0)
 				return true;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public boolean update(VideoGame obj) {
-		// TODO Auto-generated method stub
+		try {
+			String query = "UPDATE Video_game SET videoGameName = ?, creditCost = ?, console = ? WHERE number = ?";
+			PreparedStatement stmt = this.connection.prepareStatement(query);
+			stmt.setString(1, obj.getName());
+			stmt.setInt(2, obj.getCreditCost());
+			stmt.setString(3, obj.getConsole());
+			stmt.setInt(4, obj.getNumber());
+
+			int res = stmt.executeUpdate();
+			stmt.close();
+			if(res == 1)
+				return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 
@@ -132,16 +148,16 @@ public class VideoGameDAO extends DAO<VideoGame> {
 			String query = "DELETE FROM Video_game WHERE number = ?";
 			PreparedStatement stmt = this.connection.prepareStatement(query);
 			stmt.setInt(1, obj.getNumber());
-			
+
 			int res = stmt.executeUpdate();
 			stmt.close();
 			if(res == 1)
 				return true;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 

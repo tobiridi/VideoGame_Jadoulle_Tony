@@ -27,7 +27,7 @@ public class UserDAO extends DAO<User> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public boolean create(User obj) {
 		// TODO Auto-generated method stub
@@ -45,20 +45,20 @@ public class UserDAO extends DAO<User> {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	public User authenticate(String username, String password) {
 		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 		DAO<Player> playerDao = adf.getPlayerDao();
 		Connection connection = DatabaseConnection.getInstance();
 		User authenticateUser = null;
-		
+
 		try {
 			String query = "SELECT * FROM User WHERE username = ? AND password = ?";
 			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setString(1, username);
 			stmt.setString(2, password);
 			ResultSet res = stmt.executeQuery();
-			
+
 			if(res.next()) {
 				int id = res.getInt("id");
 				if(res.getBoolean("isAdmin")) {
@@ -70,11 +70,11 @@ public class UserDAO extends DAO<User> {
 			}
 			res.close();
 			stmt.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return authenticateUser;
 	}
 }

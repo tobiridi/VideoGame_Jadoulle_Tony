@@ -1,9 +1,25 @@
 package be.Jadoulle.Frame;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import be.Jadoulle.Components.VideoGameTableModel;
@@ -11,37 +27,21 @@ import be.Jadoulle.POJO.Booking;
 import be.Jadoulle.POJO.Copy;
 import be.Jadoulle.POJO.Loan;
 import be.Jadoulle.POJO.Player;
-import be.Jadoulle.POJO.User;
 import be.Jadoulle.POJO.VideoGame;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
-import javax.swing.SwingConstants;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ConsultVideoGamesFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 	private VideoGame selectedGame;
+	private ArrayList<VideoGame> videoGames;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					ConsultVideoGamesFrame frame = new ConsultVideoGamesFrame(null);
@@ -53,29 +53,35 @@ public class ConsultVideoGamesFrame extends JFrame {
 		});
 	}
 
+	@Override
+	protected void frameInit() {
+		super.frameInit();
+		this.videoGames = VideoGame.getAll();
+	}
+	
 	/**
 	 * Create the frame.
 	 */
 	public ConsultVideoGamesFrame(Player player) {
 		setTitle("Liste des jeux disponible");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblTitle = new JLabel("Liste des jeux");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Book Antiqua", Font.PLAIN, 18));
 		lblTitle.setBounds(130, 10, 150, 20);
 		contentPane.add(lblTitle);
-		
-		JScrollPane scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		JScrollPane scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setBounds(45, 50, 345, 150);
 		contentPane.add(scrollPane);
-		
+
 		table = new JTable();
 		//parameter the JTable model
 		this.tableModelChange();
@@ -90,9 +96,10 @@ public class ConsultVideoGamesFrame extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		scrollPane.setViewportView(table);
-		
+
 		JButton btnLoan = new JButton("Réserver");
 		btnLoan.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(selectedGame == null) {
 					JOptionPane.showMessageDialog(ConsultVideoGamesFrame.this, "Aucun jeu séléctionner", "Copie", JOptionPane.ERROR_MESSAGE);
@@ -119,9 +126,10 @@ public class ConsultVideoGamesFrame extends JFrame {
 			btnLoan.setEnabled(false);
 		}
 		contentPane.add(btnLoan);
-		
+
 		JButton btnBack = new JButton("Retour");
 		btnBack.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlayerMainFrame frame = new PlayerMainFrame(player);
 				frame.setVisible(true);
@@ -132,27 +140,26 @@ public class ConsultVideoGamesFrame extends JFrame {
 		btnBack.setBounds(96, 211, 100, 25);
 		contentPane.add(btnBack);
 	}
-	
+
 	private void tableModelChange() {
-		ArrayList<VideoGame> videoGames = VideoGame.getAll();
-		VideoGameTableModel customModel = new VideoGameTableModel(videoGames);
-		
+		VideoGameTableModel customModel = new VideoGameTableModel(this.videoGames);
+
 		//column title
 		String[] identifiersCol = {"Nom du jeu", "Console", "Coût en crédits", "Date de Sortie"};
 		customModel.setColumnIdentifiers(identifiersCol);
-		
+
 		//data of each row
-		for (VideoGame game : videoGames) {
+		for (VideoGame game : this.videoGames) {
 			String[] gameData = {game.getName(), game.getConsole(), "" + game.getCreditCost(), game.getReleaseDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))};
 			customModel.addRow(gameData);
 		}
-		
+
 		table.setModel(customModel);
 		//first column is the 2/3 of total column width
 		int prefWidth = table.getColumnModel().getTotalColumnWidth() * 2 / 3;
 		table.getColumnModel().getColumn(0).setPreferredWidth(prefWidth);
 	}
-	
+
 	private void loanCopy(Player player, Copy gameCopy) {
 		try {
 			if(player.loanAllowed(gameCopy)) {
@@ -160,13 +167,13 @@ public class ConsultVideoGamesFrame extends JFrame {
 				if(userInput == null)
 					//user cancel
 					return;
-				
+
 				int weeks = Integer.parseInt(userInput);
 				LocalDate endDate = LocalDate.now().plusDays((weeks * 7) - 1); // start date + 6 days
 				//LocalDate endDate = LocalDate.now().plusWeeks(weeks); // not start date + 7 days
 				Loan newLoan = new Loan(0, LocalDate.now(), endDate, true, gameCopy.getOwner(), player, gameCopy, 0);
 				gameCopy.setCopyLoan(newLoan);
-				
+
 				if(gameCopy.borrow()) {
 					JOptionPane.showMessageDialog(ConsultVideoGamesFrame.this, "Emprunt effectuée", "Emprunt", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -177,7 +184,7 @@ public class ConsultVideoGamesFrame extends JFrame {
 			else {
 				JOptionPane.showMessageDialog(ConsultVideoGamesFrame.this, "Vous n'avez pas assez de crédits pour le jeu\n\"" + selectedGame.getName() + "\"", "Emprunt", JOptionPane.ERROR_MESSAGE);
 			}
-			
+
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre valide", "Emprunt", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -188,14 +195,14 @@ public class ConsultVideoGamesFrame extends JFrame {
 			return;
 		}
 	}
-	
+
 	private void bookingVideoGame(Player player) {
 		try {
 			String userInput = JOptionPane.showInputDialog(this, "Entrer le nombre de semaines pour le futur emprunt", "reservation", JOptionPane.QUESTION_MESSAGE);
 			if(userInput == null)
 				//user cancel
 				return;
-			
+
 			int weeks = Integer.parseInt(userInput);
 			Booking newBooking = new Booking(0, LocalDate.now(), selectedGame, player, weeks);
 			if(player.createBooking(newBooking)) {
@@ -204,7 +211,7 @@ public class ConsultVideoGamesFrame extends JFrame {
 			else {
 				JOptionPane.showMessageDialog(ConsultVideoGamesFrame.this, "Erreur lors de la réservation", "Emprunt", JOptionPane.ERROR_MESSAGE);
 			}
-			
+
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre valide", "reservation", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -215,5 +222,5 @@ public class ConsultVideoGamesFrame extends JFrame {
 			return;
 		}
 	}
-	
+
 }

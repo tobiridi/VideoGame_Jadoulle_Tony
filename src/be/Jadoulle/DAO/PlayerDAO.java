@@ -29,7 +29,7 @@ public class PlayerDAO extends DAO<Player> {
 		int lastIdBooking = 0;
 		int lastIdLoan = 0;
 		ArrayList<Integer> lastIdCopy = new ArrayList<>();
-		
+
 		try {
 			String query = "SELECT User.username, User.pseudo, User.isAdmin, User.registration, User.dateOfBirth, User.credits, "
 					+ "Loan.id AS Loan_id, Video_game_copy.id AS Video_game_copy_id, Booking.id AS booking_id "
@@ -38,7 +38,7 @@ public class PlayerDAO extends DAO<Player> {
 					+ "WHERE (((User.id) = ?))";
 			PreparedStatement stmt = this.connection.prepareStatement(query);
 			stmt.setInt(1, id);
-			
+
 			ResultSet res = stmt.executeQuery();
 			while(res.next()) {
 				if(player == null) {
@@ -49,14 +49,14 @@ public class PlayerDAO extends DAO<Player> {
 						LocalDate registration = res.getDate("registration").toLocalDate();
 						LocalDate birth =res.getDate("dateOfBirth").toLocalDate();
 						int credits = res.getInt("credits");
-						
+
 						player = new Player(id, username, null, credits, pseudo, registration, birth);
 					}
 					else {
 						return null;
 					}
 				}
-				
+
 				//add bookings
 				if(res.getInt("booking_id") != 0) {
 					Booking booking = bookingDao.find(res.getInt("booking_id"));
@@ -65,7 +65,7 @@ public class PlayerDAO extends DAO<Player> {
 						player.addBooking(booking);
 					}
 				}
-				
+
 				//add copies
 				if(res.getInt("Video_game_copy_id") != 0) {
 					Copy copy = copyDao.find(res.getInt("Video_game_copy_id"));
@@ -86,9 +86,9 @@ public class PlayerDAO extends DAO<Player> {
 							player.addCopy(copy);
 						}
 					}
-					
+
 				}
-				
+
 				//add loans borrower
 				if(res.getInt("Loan_id") != 0) {
 					Loan loan = loanDao.find(res.getInt("Loan_id"));
@@ -98,10 +98,10 @@ public class PlayerDAO extends DAO<Player> {
 					}
 				}
 			}
-			
+
 			stmt.close();
 			res.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -114,7 +114,7 @@ public class PlayerDAO extends DAO<Player> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public boolean create(Player obj) {
 		try {
@@ -126,16 +126,16 @@ public class PlayerDAO extends DAO<Player> {
 			stmt.setDate(4, Date.valueOf(obj.getRegistrationDate()));
 			stmt.setDate(5, Date.valueOf(obj.getDateOfBirth()));
 			stmt.setInt(6, obj.getCredits());
-			
+
 			int res = stmt.executeUpdate();
 			stmt.close();
 			if(res != 0)
 				return true;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 

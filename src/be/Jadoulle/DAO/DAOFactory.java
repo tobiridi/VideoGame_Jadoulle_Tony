@@ -41,5 +41,5 @@ public class DAOFactory extends AbstractDAOFactory {
 	public DAO<Booking> getBookingDao() {
 		return new BookingDAO(connection);
 	}
-	
+
 }

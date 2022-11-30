@@ -9,7 +9,7 @@ import be.Jadoulle.DAO.DAO;
 
 public class VideoGame implements Serializable {
 	private static final long serialVersionUID = 6497780619918639099L;
-	
+
 	private int number;
 	private String name;
 	private int creditCost;
@@ -17,14 +17,14 @@ public class VideoGame implements Serializable {
 	private LocalDate releaseDate;
 	private ArrayList<Booking> bookings;
 	private ArrayList<Copy> copies;
-	
+
 	public int getNumber() {
 		return number;
 	}
 	public void setNumber(int number) {
 		this.number = number;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -76,22 +76,22 @@ public class VideoGame implements Serializable {
 		this.bookings = new ArrayList<>();
 		this.copies = new ArrayList<>();
 	}
-	
+
 	//methods
 	public void addBooking(Booking booking) {
 		this.bookings.add(booking);
 	}
-	
+
 	public void addCopy(Copy copy) {
 		this.copies.add(copy);
 	}
-	
+
 	public static ArrayList<VideoGame> getAll(){
 		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 		DAO<VideoGame> gameDao = adf.getVideoGameDao();
 		return gameDao.findAll();
 	}
-	
+
 	/**
 	 * Search if a copy is available, if {@code player} argument is not null<br>
 	 * exclude the copy of this player if exists.
@@ -107,7 +107,7 @@ public class VideoGame implements Serializable {
 					continue;
 				}
 			}
-			
+
 			if(c.isAvailable()) {
 				//return first copy available
 				return c;

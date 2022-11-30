@@ -8,11 +8,11 @@ import be.Jadoulle.DAO.UserDAO;
 
 public abstract class User implements Serializable {
 	private static final long serialVersionUID = 1695476360458977633L;
-	
+
 	protected int id;
 	protected String username;
 	protected String password;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -40,31 +40,29 @@ public abstract class User implements Serializable {
 		this.username = username;
 		this.password = password;
 	}
-	
-	//methods	
+
+	//methods
 	public static User login(String username, String password) {
 		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 		User userAuthenticate =  ((UserDAO) adf.getUserDao()).authenticate(username, password);
 		return userAuthenticate;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, password, username);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) 
+		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (this.getClass() != obj.getClass())
+		if ((obj == null) || (this.getClass() != obj.getClass()))
 			return false;
 		User other = (User) obj;
-		return this.id == other.id; 
+		return this.id == other.id;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + "]";
