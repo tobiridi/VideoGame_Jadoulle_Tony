@@ -3,6 +3,8 @@ package be.Jadoulle.POJO;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import be.Jadoulle.DAO.AbstractDAOFactory;
+
 public class Booking implements Serializable {
 	private static final long serialVersionUID = -5166184745766613819L;
 
@@ -53,6 +55,11 @@ public class Booking implements Serializable {
 		this.videoGame = videoGame;
 		this.player = player;
 		this.nbrWeeks = nbrWeeks;
+	}
+	
+	public boolean delete() {
+		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+		return adf.getBookingDao().delete(this);
 	}
 
 }

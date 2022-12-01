@@ -68,8 +68,26 @@ public class BookingDAO extends DAO<Booking> {
 
 	@Override
 	public ArrayList<Booking> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Booking> bookings = new ArrayList<>();
+		try {
+			String query = "SELECT id FROM Booking";
+
+			ResultSet res = this.connection
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery(query);
+			
+			while(res.next()) {
+				Booking booking = this.find(res.getInt("id"));
+				bookings.add(booking);
+			}
+
+			res.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return bookings;
 	}
 
 	@Override
@@ -97,13 +115,25 @@ public class BookingDAO extends DAO<Booking> {
 
 	@Override
 	public boolean update(Booking obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean delete(Booking obj) {
-		// TODO Auto-generated method stub
+		try {
+			String query = "DELETE FROM Booking WHERE id = ?";
+			PreparedStatement stmt = this.connection.prepareStatement(query);
+			stmt.setInt(1, obj.getId());
+
+			int res = stmt.executeUpdate();
+			stmt.close();
+			if(res == 1)
+				return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 

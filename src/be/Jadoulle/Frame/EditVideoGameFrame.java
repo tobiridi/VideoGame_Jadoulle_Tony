@@ -21,9 +21,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import be.Jadoulle.Components.VideoGameTableModel;
-import be.Jadoulle.DAO.DatabaseConnection;
 import be.Jadoulle.POJO.Administrator;
-import be.Jadoulle.POJO.User;
 import be.Jadoulle.POJO.VideoGame;
 
 public class EditVideoGameFrame extends JFrame {

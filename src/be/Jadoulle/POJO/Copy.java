@@ -42,6 +42,7 @@ public class Copy implements Serializable {
 		this.copyLoan = copyLoan;
 	}
 
+	//constructor
 	public Copy(int id, Player owner, VideoGame videoGame) {
 		this.id = id;
 		this.owner = owner;
@@ -53,18 +54,20 @@ public class Copy implements Serializable {
 		this.copyLoan = loan;
 	}
 
+	//methods
 	public boolean isAvailable() {
 		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 		ArrayList<Loan> loans = adf.getLoanDao().findAll();
 		boolean isAvailable = true;
 
 		for(Loan loan : loans) {
-			if(loan.getCopy().equals(this)) {
+			if(loan.getCopy().equals(this) && loan.isOnGoing()) {
 				//copy loaned
 				isAvailable = false;
 				break;
 			}
 		}
+		
 		return isAvailable;
 	}
 
@@ -88,5 +91,16 @@ public class Copy implements Serializable {
 		return this.id == other.id;
 	}
 
+	public boolean releaseCopy() {
+		boolean success = false;
+		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+		success = adf.getLoanDao().update(this.copyLoan);
+		
+		if(success) {
+			this.videoGame.selectBooking();
+		}
+		
+		return success;
+	}
 
 }

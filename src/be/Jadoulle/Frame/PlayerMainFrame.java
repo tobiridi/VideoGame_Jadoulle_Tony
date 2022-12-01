@@ -71,12 +71,12 @@ public class PlayerMainFrame extends JFrame {
 
 		JButton btnConsultGames = new JButton("<html>Consulter les jeux vidéos</html>");
 		btnConsultGames.setVerticalAlignment(SwingConstants.TOP);
-		btnConsultGames.setBounds(38, 75, 140, 50);
+		btnConsultGames.setBounds(38, 75, 150, 50);
 		btnConsultGames.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		btnConsultGames.addActionListener((ActionEvent e) -> {
 			//display message before consult video game frame
 			if(!player.hasCredits()) {
-				JOptionPane.showMessageDialog(PlayerMainFrame.this, "Vous n'avez pas assez de crédits pour réserver un jeu", "Copie", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(PlayerMainFrame.this, "Vous n'avez pas assez de crédits pour louer un jeu", "Copie", JOptionPane.WARNING_MESSAGE);
 			}
 			ConsultVideoGamesFrame frame = new ConsultVideoGamesFrame(player);
 			frame.setVisible(true);
@@ -84,16 +84,18 @@ public class PlayerMainFrame extends JFrame {
 		});
 		contentPane.add(btnConsultGames);
 
-		JButton btnConsultLoans = new JButton("<html>Consulter vos réservations</html>");
+		JButton btnConsultLoans = new JButton("<html>Consulter vos jeux empruntés</html>");
 		btnConsultLoans.setVerticalAlignment(SwingConstants.TOP);
 		btnConsultLoans.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
-		btnConsultLoans.setBounds(38, 135, 140, 50);
+		btnConsultLoans.setBounds(38, 135, 150, 50);
 		btnConsultLoans.addActionListener((ActionEvent e) -> {
-			//TODO : not implemented
+			ConsultLoanLenderFrame frame = new ConsultLoanLenderFrame(player);
+			frame.setVisible(true);
+			dispose();
 		});
 		contentPane.add(btnConsultLoans);
 
-		JButton btnAddCopy = new JButton("<html>Prêter un jeu video</html>");
+		JButton btnAddCopy = new JButton("<html>Prêter un jeu vidéo</html>");
 		btnAddCopy.addActionListener((ActionEvent e) -> {
 			AddCopyVideoGameFrame frame = new AddCopyVideoGameFrame(player);
 			frame.setVisible(true);
@@ -101,7 +103,7 @@ public class PlayerMainFrame extends JFrame {
 		});
 		btnAddCopy.setVerticalAlignment(SwingConstants.TOP);
 		btnAddCopy.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
-		btnAddCopy.setBounds(38, 195, 140, 50);
+		btnAddCopy.setBounds(38, 195, 150, 50);
 		contentPane.add(btnAddCopy);
 
 		JButton btnDisconnect = new JButton("Déconnexion");

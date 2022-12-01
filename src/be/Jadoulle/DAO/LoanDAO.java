@@ -73,6 +73,7 @@ public class LoanDAO extends DAO<Loan> {
 			ResultSet res = this.connection
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery(query);
+			
 			while(res.next()) {
 				Loan loan = this.find(res.getInt("id"));
 				loans.add(loan);
@@ -114,13 +115,44 @@ public class LoanDAO extends DAO<Loan> {
 
 	@Override
 	public boolean update(Loan obj) {
-		// TODO Auto-generated method stub
+		try {
+			String query = "UPDATE Loan SET startDate = ?, endDate = ?, onGoing = ?, lateDays = ? "
+					+ "WHERE id = ?";
+			PreparedStatement stmt = this.connection.prepareStatement(query);
+			stmt.setDate(1, Date.valueOf(obj.getStartDate()));
+			stmt.setDate(2, Date.valueOf(obj.getEndDate()));
+			stmt.setBoolean(3, obj.isOnGoing());
+			stmt.setInt(4, obj.getLateDays());
+			stmt.setInt(5, obj.getId());
+
+			int res = stmt.executeUpdate();
+			stmt.close();
+			if(res == 1)
+				return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 
 	@Override
 	public boolean delete(Loan obj) {
-		// TODO Auto-generated method stub
+		try {
+			String query = "DELETE FROM Loan WHERE id = ?";
+			PreparedStatement stmt = this.connection.prepareStatement(query);
+			stmt.setInt(1, obj.getId());
+
+			int res = stmt.executeUpdate();
+			stmt.close();
+			if(res == 1)
+				return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 

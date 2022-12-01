@@ -1,7 +1,10 @@
 package be.Jadoulle.POJO;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDate;
+
+import be.Jadoulle.DAO.AbstractDAOFactory;
 
 public class Loan implements Serializable {
 	private static final long serialVersionUID = -2955997554746322446L;
@@ -83,6 +86,44 @@ public class Loan implements Serializable {
 		this.lateDays = lateDays;
 	}
 
-
+	//methods
+	public void calculateBalance() {
+		AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+		
+		this.lateDays = (int) Duration.between(this.endDate.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays();
+		int lateDaysMalus = this.lateDays * 5;
+		int creditBorrower = this.borrower.getCredits();
+		int creditLender = this.lender.getCredits();;
+		
+		creditBorrower -= lateDaysMalus;
+		creditBorrower -= this.copy.getVideoGame().getCreditCost();
+		
+		creditLender += this.copy.getVideoGame().getCreditCost();
+		creditLender += lateDaysMalus;
+		
+		this.borrower.setCredits(creditBorrower);
+		this.lender.setCredits(creditLender);
+		
+		adf.getLoanDao().update(this);
+		adf.getPlayerDao().update(this.borrower);
+		adf.getPlayerDao().update(this.lender);
+	}
+	
+	public boolean endLoan() {
+		boolean success = false;
+		
+		if((LocalDate.now().isAfter(this.endDate) || LocalDate.now().equals(this.endDate))
+			&& this.onGoing) {
+			
+			this.onGoing = false;
+			this.copy.setCopyLoan(this);
+			success = this.copy.releaseCopy();
+			
+			if(success) {
+				this.calculateBalance();
+			}
+		}
+		return success;
+	}
 
 }

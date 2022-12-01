@@ -26,8 +26,8 @@ public class PlayerDAO extends DAO<Player> {
 		DAO<Copy> copyDao = adf.getCopyDao();
 		DAO<Loan> loanDao = adf.getLoanDao();
 		Player player = null;
-		int lastIdBooking = 0;
-		int lastIdLoan = 0;
+		ArrayList<Integer> lastIdBooking = new ArrayList<>();
+		ArrayList<Integer> lastIdLoan = new ArrayList<>();
 		ArrayList<Integer> lastIdCopy = new ArrayList<>();
 
 		try {
@@ -51,6 +51,14 @@ public class PlayerDAO extends DAO<Player> {
 						int credits = res.getInt("credits");
 
 						player = new Player(id, username, null, credits, pseudo, registration, birth);
+						
+						//add loans lender
+						ArrayList<Loan> allLoans = adf.getLoanDao().findAll();
+						for(Loan loan : allLoans) {
+							if (loan.getCopy().getOwner().equals(player)) {
+								player.addLenderLoan(loan);
+							}
+						}
 					}
 					else {
 						return null;
@@ -60,9 +68,22 @@ public class PlayerDAO extends DAO<Player> {
 				//add bookings
 				if(res.getInt("booking_id") != 0) {
 					Booking booking = bookingDao.find(res.getInt("booking_id"));
-					if(booking.getId() != lastIdBooking) {
-						lastIdBooking = booking.getId();
+					if(lastIdBooking.size() == 0) {
+						lastIdBooking.add(booking.getId());
 						player.addBooking(booking);
+					}
+					else {
+						boolean isFind = false;
+						for(int idBooking : lastIdBooking) {
+							if(idBooking == booking.getId()) {
+								isFind = true;
+								break;
+							}
+						}
+						if(!isFind) {
+							lastIdBooking.add(booking.getId());
+							player.addBooking(booking);
+						}
 					}
 				}
 
@@ -86,15 +107,27 @@ public class PlayerDAO extends DAO<Player> {
 							player.addCopy(copy);
 						}
 					}
-
 				}
 
 				//add loans borrower
 				if(res.getInt("Loan_id") != 0) {
 					Loan loan = loanDao.find(res.getInt("Loan_id"));
-					if(loan.getId() != lastIdLoan) {
-						lastIdLoan = loan.getId();
+					if(lastIdLoan.size() == 0) {
+						lastIdLoan.add(loan.getId());
 						player.addBorrowerLoan(loan);
+					}
+					else {
+						boolean isFind = false;
+						for(int idLoan : lastIdLoan) {
+							if(idLoan == loan.getId()) {
+								isFind = true;
+								break;
+							}
+						}
+						if(!isFind) {
+							lastIdLoan.add(loan.getId());
+							player.addBorrowerLoan(loan);
+						}
 					}
 				}
 			}
@@ -111,7 +144,6 @@ public class PlayerDAO extends DAO<Player> {
 
 	@Override
 	public ArrayList<Player> findAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -141,13 +173,29 @@ public class PlayerDAO extends DAO<Player> {
 
 	@Override
 	public boolean update(Player obj) {
-		// TODO Auto-generated method stub
+		try {
+			String query = "UPDATE User SET username = ?, pseudo = ?, credits = ? "
+					+ "WHERE id = ?";
+			PreparedStatement stmt = this.connection.prepareStatement(query);
+			stmt.setString(1, obj.getUsername());
+			stmt.setString(2, obj.getPseudo());
+			stmt.setInt(3, obj.getCredits());
+			stmt.setInt(4, obj.getId());
+
+			int res = stmt.executeUpdate();
+			stmt.close();
+			if(res == 1)
+				return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 
 	@Override
 	public boolean delete(Player obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

@@ -114,13 +114,11 @@ public class CopyDAO extends DAO<Copy> {
 
 	@Override
 	public boolean update(Copy obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean delete(Copy obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

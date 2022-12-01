@@ -30,7 +30,7 @@ public class AddCopyVideoGameFrame extends JFrame {
 	private JButton btnCancel;
 	private JButton btnConfirm;
 	private JScrollPane scrollPane;
-	private VideoGame gameSelected;
+	private VideoGame selectedGame;
 	private ArrayList<VideoGame> videoGames;
 
 	/**
@@ -88,7 +88,8 @@ public class AddCopyVideoGameFrame extends JFrame {
 				//save the video game object based the row in the JTable
 				int row = table.getSelectedRow();
 				VideoGameTableModel model = (VideoGameTableModel) table.getModel();
-				gameSelected = model.getVideoGameAt(row);
+				selectedGame = model.getVideoGameAt(row);
+				System.out.println(selectedGame.getNumber() + " " + selectedGame.getName() + " " + selectedGame.getConsole());
 			}
 		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -110,14 +111,14 @@ public class AddCopyVideoGameFrame extends JFrame {
 		btnConfirm.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		btnConfirm.setBounds(210, 211, 120, 25);
 		btnConfirm.addActionListener((ActionEvent e) -> {
-			if(gameSelected != null) {
+			if(selectedGame != null) {
 				//display confirm message
-				String confirmMessage = "Êtes-vous sur de vouloir ajouter " + gameSelected.getName() + " " + gameSelected.getConsole();
+				String confirmMessage = "Êtes-vous sur de vouloir ajouter\n" + selectedGame.getName() + " " + selectedGame.getConsole();
 				int validation = JOptionPane.showConfirmDialog(AddCopyVideoGameFrame.this, confirmMessage, "Confirmation jeu", JOptionPane.YES_NO_OPTION);
 				if(validation == 0) {
-					if(player.createCopy(gameSelected)) {
+					if(player.createCopy(selectedGame)) {
 						//display success message
-						String successMessage = "Une copie pour " + gameSelected.getName() + " " + gameSelected.getConsole() + " a été enregistrer";
+						String successMessage = "Une copie pour " + selectedGame.getName() + " " + selectedGame.getConsole() + " a été enregistrer";
 						JOptionPane.showMessageDialog(AddCopyVideoGameFrame.this, successMessage, "Information",JOptionPane.INFORMATION_MESSAGE);
 					}
 					else {

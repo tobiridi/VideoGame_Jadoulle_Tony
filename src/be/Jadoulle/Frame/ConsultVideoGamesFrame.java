@@ -97,7 +97,7 @@ public class ConsultVideoGamesFrame extends JFrame {
 		table.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		scrollPane.setViewportView(table);
 
-		JButton btnLoan = new JButton("Réserver");
+		JButton btnLoan = new JButton("Louer");
 		btnLoan.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -169,8 +169,8 @@ public class ConsultVideoGamesFrame extends JFrame {
 					return;
 
 				int weeks = Integer.parseInt(userInput);
-				LocalDate endDate = LocalDate.now().plusDays((weeks * 7) - 1); // start date + 6 days
-				//LocalDate endDate = LocalDate.now().plusWeeks(weeks); // not start date + 7 days
+				//LocalDate endDate = LocalDate.now().plusDays((weeks * 7) - 1); // start date + 6 days
+				LocalDate endDate = LocalDate.now().plusWeeks(weeks); // not start date + 7 days
 				Loan newLoan = new Loan(0, LocalDate.now(), endDate, true, gameCopy.getOwner(), player, gameCopy, 0);
 				gameCopy.setCopyLoan(newLoan);
 
