@@ -79,7 +79,6 @@ public class ConsultLoanLenderFrame extends JFrame {
 				selectedRow = table.getSelectedRow();
 				LoanTableModel model = (LoanTableModel) table.getModel();
 				selectedLoan = model.getLoanAt(selectedRow);
-				System.out.println("loan : " + selectedLoan.getId());
 			}
 		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

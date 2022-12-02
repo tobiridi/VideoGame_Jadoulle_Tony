@@ -89,7 +89,6 @@ public class AddCopyVideoGameFrame extends JFrame {
 				int row = table.getSelectedRow();
 				VideoGameTableModel model = (VideoGameTableModel) table.getModel();
 				selectedGame = model.getVideoGameAt(row);
-				System.out.println(selectedGame.getNumber() + " " + selectedGame.getName() + " " + selectedGame.getConsole());
 			}
 		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
