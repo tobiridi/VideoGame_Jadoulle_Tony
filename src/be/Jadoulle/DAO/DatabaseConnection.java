@@ -11,8 +11,8 @@ public class DatabaseConnection {
 
 	private DatabaseConnection() {
 		try {
-			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			String url = "jdbc:ucanaccess://./VideoGame.accdb";
+			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			instance = DriverManager.getConnection(url);
 		} catch (ClassNotFoundException ex) {
 			JOptionPane.showMessageDialog(null, "Classe de driver introuvable " + ex.getMessage());

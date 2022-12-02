@@ -21,15 +21,13 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import be.Jadoulle.Components.VideoGameTableModel;
-import be.Jadoulle.POJO.Player;
+import be.Jadoulle.POJO.Administrator;
 import be.Jadoulle.POJO.VideoGame;
 
-public class AddCopyVideoGameFrame extends JFrame {
+public class EditVideoGameFrame extends JFrame {
+
 	private JPanel contentPane;
 	private JTable table;
-	private JButton btnCancel;
-	private JButton btnConfirm;
-	private JScrollPane scrollPane;
 	private VideoGame selectedGame;
 	private ArrayList<VideoGame> videoGames;
 
@@ -41,7 +39,7 @@ public class AddCopyVideoGameFrame extends JFrame {
 			@Override
 			public void run() {
 				try {
-					AddCopyVideoGameFrame frame = new AddCopyVideoGameFrame(null);
+					EditVideoGameFrame frame = new EditVideoGameFrame(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,18 +47,18 @@ public class AddCopyVideoGameFrame extends JFrame {
 			}
 		});
 	}
-
+	
 	@Override
 	protected void frameInit() {
 		super.frameInit();
 		this.videoGames = VideoGame.getAll();
 	}
-	
+
 	/**
 	 * Create the frame.
 	 */
-	public AddCopyVideoGameFrame(Player player) {
-		setTitle("Prêter un nouveau jeu");
+	public EditVideoGameFrame(Administrator admin) {
+		setTitle("Edit jeux");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -69,23 +67,20 @@ public class AddCopyVideoGameFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel lblTitle = new JLabel("Jeu à mettre en location");
-		lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
+		JLabel lblTitle = new JLabel("Modification des jeux");
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Book Antiqua", Font.PLAIN, 18));
-		lblTitle.setBounds(110, 10, 210, 20);
+		lblTitle.setBounds(130, 10, 190, 20);
 		contentPane.add(lblTitle);
 
-		scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setBounds(30, 70, 375, 130);
+		JScrollPane scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBounds(30, 39, 360, 150);
 		contentPane.add(scrollPane);
 
 		table = new JTable();
-		//parameter the JTable model
-		this.tableModelChange();
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//save the video game object based the row in the JTable
 				int row = table.getSelectedRow();
 				VideoGameTableModel model = (VideoGameTableModel) table.getModel();
 				selectedGame = model.getVideoGameAt(row);
@@ -95,54 +90,67 @@ public class AddCopyVideoGameFrame extends JFrame {
 		table.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
 		scrollPane.setViewportView(table);
 
-		btnCancel = new JButton("Annuler");
-		btnCancel.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
-		btnCancel.setBounds(80, 211, 100, 25);
-		btnCancel.addActionListener((ActionEvent e) -> {
-			//back to player main frame
-			PlayerMainFrame frame = new PlayerMainFrame(player);
+		JButton btnBack = new JButton("Retour");
+		btnBack.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
+		btnBack.setBounds(30, 200, 110, 25);
+		btnBack.addActionListener((ActionEvent e) -> {
+			// back to admin main frame
+			AdminMainFrame frame = new AdminMainFrame(admin);
 			frame.setVisible(true);
 			dispose();
 		});
-		contentPane.add(btnCancel);
+		contentPane.add(btnBack);
 
-		btnConfirm = new JButton("Confirmer");
-		btnConfirm.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
-		btnConfirm.setBounds(210, 211, 120, 25);
-		btnConfirm.addActionListener((ActionEvent e) -> {
+		JButton btnModify = new JButton("Modifier");
+		btnModify.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
+		btnModify.setBounds(150, 200, 110, 25);
+		btnModify.addActionListener((ActionEvent e) -> {
 			if(selectedGame != null) {
-				//display confirm message
-				String confirmMessage = "Êtes-vous sur de vouloir ajouter\n" + selectedGame.getName() + " " + selectedGame.getConsole();
-				int validation = JOptionPane.showConfirmDialog(AddCopyVideoGameFrame.this, confirmMessage, "Confirmation jeu", JOptionPane.YES_NO_OPTION);
-				if(validation == 0) {
-					if(player.createCopy(selectedGame)) {
-						//display success message
-						String successMessage = "Une copie pour " + selectedGame.getName() + " " + selectedGame.getConsole() + " a été enregistrer";
-						JOptionPane.showMessageDialog(AddCopyVideoGameFrame.this, successMessage, "Information",JOptionPane.INFORMATION_MESSAGE);
+				ModifyVideoGameFrame frame = new ModifyVideoGameFrame(admin, selectedGame);
+				frame.setVisible(true);
+				dispose();
+			}
+			else {
+				JOptionPane.showMessageDialog(EditVideoGameFrame.this, "Aucun jeu sélectionner", "Edit jeux", JOptionPane.ERROR_MESSAGE);
+			}
+		});
+		contentPane.add(btnModify);
+
+		JButton btnDelete = new JButton("Supprimer");
+		btnDelete.setFont(new Font("Book Antiqua", Font.PLAIN, 16));
+		btnDelete.setBounds(270, 200, 120, 25);
+		btnDelete.addActionListener((ActionEvent e) -> {
+			if(selectedGame != null) {
+				int res = JOptionPane.showConfirmDialog(EditVideoGameFrame.this, "Voulez-vous vraiment supprimer le jeu\n"
+						  + selectedGame.getName() + " " + selectedGame.getConsole() + " ?", "Edit jeux", JOptionPane.YES_NO_OPTION);
+
+				if(res == 0) {
+					if(admin.deleteVideoGame(selectedGame)) {
+						JOptionPane.showMessageDialog(EditVideoGameFrame.this, "le jeu a bien été supprimer", "Edit jeux", JOptionPane.INFORMATION_MESSAGE);
+						EditVideoGameFrame refreshFrame = new EditVideoGameFrame(admin);
+						refreshFrame.setVisible(true);
+						dispose();
 					}
 					else {
-						JOptionPane.showMessageDialog(AddCopyVideoGameFrame.this, "Le jeu n'a pas pu être enregistrer", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(EditVideoGameFrame.this, "Erreur lors de la suppression", "Edit jeux", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 			else {
-				JOptionPane.showMessageDialog(AddCopyVideoGameFrame.this, "Aucun jeu n'a été sélectionner", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(EditVideoGameFrame.this, "Aucun jeu sélectionner", "Edit jeux", JOptionPane.ERROR_MESSAGE);
 			}
-
 		});
-		contentPane.add(btnConfirm);
-
-		JLabel lblTableInfo = new JLabel("<html>*Sélectionner dans le tableau le jeu pour lequel vous voudriez mettre une copie en prêt.</html>");
-		lblTableInfo.setBounds(80, 35, 300, 30);
-		lblTableInfo.setFont(new Font("Book Antiqua", Font.PLAIN, 12));
-		contentPane.add(lblTableInfo);
+		contentPane.add(btnDelete);
+		
+		//parameter the JTable model
+		this.tableModelChange();
 	}
 
 	private void tableModelChange() {
 		VideoGameTableModel customModel = new VideoGameTableModel(this.videoGames);
 
 		//column title
-		String[] identifiersCol = {"Nom du jeu", "Console", "Gain crédits", "Date de Sortie"};
+		String[] identifiersCol = {"Nom du jeu", "Console", "Coût en crédits", "Date de Sortie"};
 		customModel.setColumnIdentifiers(identifiersCol);
 
 		//data of each row
